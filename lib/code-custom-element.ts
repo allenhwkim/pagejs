@@ -21,15 +21,16 @@ export function codeCustomElement(
     'connectedCallback', 'disconnectedCallback', 'attributeChangedCallback', 
   ];
 
+  const libImports: string[] = [];
+  if (includes.imports) {
+    opts.resolve?.toString().indexOf('loadScript(') && libImports.push('loadScript');
+    opts.resolve?.toString().indexOf('waitFor(') && libImports.push('waitFor');
+    opts.css && libImports.push('addCss', 'removeCss');
+  }
+
   const str = /*javascript*/ `
     ${includes.imports ?  `import morphdom from 'morphdom/dist/morphdom-esm';` : ''}
-    ${includes.imports && opts.css ? `import postcss  from 'postcss';`: '' }
-    ${includes.imports && opts.css ? `import prefixer from 'postcss-prefix-selector';` : '' }
-
-    ${includes.functions && opts.resolve?.toString().indexOf('loadScript(') ? loadScript : ''}\n
-    ${includes.functions && opts.resolve?.toString().indexOf('waitFor(') ? waitFor : ''}\n
-    ${includes.functions && opts.css ? addCss : ''}\n
-    ${includes.functions && opts.css ? removeCss : ''}\n
+    ${libImports.length ? `import {${libImports.join(', ')}} from './lib';` : ''}
     ${includes.functions && opts.css ? 'const css = \'' + opts.css + '\';' : ''}
 
     class ${klassName} extends HTMLElement {

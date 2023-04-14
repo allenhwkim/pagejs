@@ -39,7 +39,7 @@ const defaultInputTxt =  fixIndent(`
     }
   })`);
 
-const monacoOptions = { language: 'javascript', scrollBeyondLastLine: false};
+const monacoOptions = { language: 'javascript', scrollBeyondLastLine: false, minimap: {enabled: false}};
 const inputEditor = monaco.editor.create(document.querySelector('#input'), monacoOptions);
 const outputEditor = monaco.editor.create(document.querySelector('#output'), monacoOptions);
 
