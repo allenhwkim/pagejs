@@ -1,6 +1,6 @@
 import './style.css'
 
-import { codeCustomElement } from './lib2/code-custom-element';
+import { codeCustomElement } from './lib/code-custom-element';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.main.js';
 
 const proxy = URL.createObjectURL(new Blob([`
