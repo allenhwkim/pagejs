@@ -1,59 +1,12 @@
-import postcss  from 'postcss';
-import prefixer from 'postcss-prefix-selector';
 import prettier from 'prettier/standalone';
 import parserBabel from 'prettier/parser-babel';
+import { addCss, removeCss, loadScript, waitFor} from './util';
 
-export function addCss(tagName: string, css: string) {
-  const plugin =  prefixer({
-    prefix: tagName,
-    transform(prefix, selector, prefixedSelector, filePath, rule) { 
-      return selector.match(/^:host/) ? selector.replace(/:host/, prefix): `${prefix} ${selector}`;
-    },
-  });
-  const scopedCss = postcss().use(plugin).process(css).css;
-  !(document.querySelector(`style[${tagName}]`)) &&
-    document.head.insertAdjacentHTML('beforeend', `<style ${tagName}>${scopedCss}</style>`);
-}
-
-export function removeCss(tagName: string) { 
-  !(document.body.querySelectorAll(tagName).length) &&
-  document.head.querySelector(`style[${tagName}]`)?.remove();
-}
-
-export function loadScript(...urls) {
-  Array.from(urls).forEach(url => {
-    if (url.endsWith('.js')) {
-      const el = document.createElement('script');
-      el.setAttribute('src', url);
-      document.head.appendChild(el);
-    } else if (url.endsWith('.css')) {
-      const el = document.createElement('link');
-      el.setAttribute('rel', 'stylesheet');
-      el.setAttribute('href', url);
-      document.head.appendChild(el);
-    }
-  })
-};
-
-export function waitFor(expr: string, timeout: number = 3000): Promise<any> {
-  let waited = 0;
-  return new Promise(function(resolve, reject) {
-    const func = new Function(`return ${expr}`);
-    function waitForCondition() {
-      if (func()) {
-        resolve(true);
-      } else if (waited > timeout) {
-        reject(`could not resolve ${expr} in ${timeout}ms.`);
-      } else {
-        setTimeout(waitForCondition, 300);
-        waited += 300;
-      }
-    }
-    waitForCondition();
-  });
-}
-
-export function codeCustomElement(tagName:string, opts: {[key:string]: any}, includes = {imports: true, functions: true}) {
+export function codeCustomElement(
+  tagName:string, 
+  opts: {[key:string]: any}, 
+  includes = {imports: true, functions: true}
+) {
   const klassName = tagName.replace(/^[a-z]/, m => m.toUpperCase())
     .replace(/-([a-z])/g, (m, w) => w.toUpperCase());
 
@@ -64,9 +17,8 @@ export function codeCustomElement(tagName:string, opts: {[key:string]: any}, inc
 
   const reservedProps = [
     'props', 'css', 'resolve',
-    'constructorCallback', 'observedAttributes',
-    'connectedCallback', 'disconnectedCallback', 
-    'adoptedCallback', 'attributeChangedCallback', 
+    'constructorCallback', 'observedAttributes', 'adoptedCallback', 
+    'connectedCallback', 'disconnectedCallback', 'attributeChangedCallback', 
   ];
 
   const str = /*javascript*/ `
