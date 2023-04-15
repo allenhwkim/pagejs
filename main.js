@@ -16,9 +16,7 @@ const monacoOptions = { language: 'javascript', scrollBeyondLastLine: false, min
 monaco.editor.create($('#monaco-input'), monacoOptions);
 monaco.editor.create($('#monaco-output'), monacoOptions);
 
-const sessionExample = sessionStorage.getItem('example');
-sessionExample && (document.myform.example.value = sessionExample);
-
+initExamples();
 setExample();
 
 $('#show-generated-code').addEventListener('click', () => setTimeout(showGeneratedCode, 300));
@@ -36,6 +34,17 @@ function setExample() {
   document.myform.out.value = examples[key].out; 
   document.myform.css.value = examples[key].css || null; 
   sessionStorage.setItem('example', key);
+}
+
+function initExamples() {
+  const sessionExample = sessionStorage.getItem('example') || 'barcode';
+  for (var key in examples) {
+    const checked = key === sessionExample ? 'checked' : '';
+    document.myform.insertAdjacentHTML(
+      'beforeend',
+      ` <input type="radio" name="example" value="${key}" ${checked}/> ${key}`
+    );
+  }
 }
 
 function getOptions(inputTxt) { // returns customElement(..) options

@@ -24,6 +24,8 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
     opts.css && libImports.push('addCss', 'removeCss');
   }
 
+  const shouldUpdateDom = opts.observedAttributes || opts.render || opts.props;
+
   const str = /*javascript*/ `
     ${imports ?  `import morphdom from 'morphdom/dist/morphdom-esm';` : ''}
     ${imports && libImports.length ? `import {${libImports.join(', ')}} from './lib';` : ''}
@@ -34,7 +36,7 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
         return [...this.attributes]
           .reduce( (acc, attr) => {
             const attrVar = attr.name.replace(/-([a-z])/g, (m, w) => w.toUpperCase());
-            const attrVal = attr.value.match(/^\d+$/) ? +attr.value : attr.value;
+            const attrVal = !isNaN(attr.value) ? +attr.value : attr.value;
             return { ...acc, [attrVar]: attrVal };
           }, {})
       }
@@ -85,7 +87,9 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
           typeof opts.resolve === 'function' ? `await this.resolve();` : ''
         }${ 
           getFuncBody(opts.connectedCallback) 
-        }this.#updateDOM.call(this, 'connectedCallback');
+        }${ !shouldUpdateDom ? '' : ` 
+          this.#updateDOM.call(this, 'connectedCallback');
+        `}
       }
 
       ${ !(opts.disconnectedCallback || opts.css) ? '': `
@@ -102,7 +106,9 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
               typeof opts.resolve === 'function' ? 'await this.resolve();' : '' 
             }${ 
               getFuncBody(opts.attributeChangedCallback) 
-            }this.#updateDOM.call(this, 'attributeChangedCallback');
+            }${ !shouldUpdateDom ? '' : ` 
+              this.#updateDOM.call(this, 'attributeChangedCallback');
+            `}
           }
         }`
       }
@@ -122,20 +128,22 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
           
       }
 
-      #timer;
-      #updateDOM(caller) { // called when attribute/props changes and connectedCallback
-        clearTimeout(this.#timer);
-        this.#timer = setTimeout(async () => { // run as debounced since it's called from many places
-          ${typeof opts.render !== 'function' ? '' : `
-            const param =  {attrs: this.attrs, props: this['props']};
-            const newHTML = await this.render(param); // render() may not change DOM
-            if (newHTML !== undefined) { 
-              const updated = document.createElement('div')
-              updated.innerHTML = await newHTML;
-              morphdom( this /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
-            }
-          `}
-       }, 100);
+      ${ !shouldUpdateDom ? '' : `
+        #timer;
+        #updateDOM(caller) { // called when attribute/props changes and connectedCallback
+          clearTimeout(this.#timer);
+          this.#timer = setTimeout(async () => { // run as debounced since it's called from many places
+            ${typeof opts.render !== 'function' ? '' : `
+              const param =  {attrs: this.attrs, props: this['props']};
+              const newHTML = await this.render(param); // render() may not change DOM
+              if (newHTML !== undefined) { 
+                const updated = document.createElement('div')
+                updated.innerHTML = await newHTML;
+                morphdom( this /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
+              }
+            `}
+        }, 100);
+      `}
       }
 
     }
