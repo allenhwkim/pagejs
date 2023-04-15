@@ -27,6 +27,10 @@ import maskHtml from './input-mask/input-mask.html?raw';
 import maskOpts from './input-mask/input-mask.js?raw';
 import maskCss  from './input-mask/input-mask.css?inline';
 
+import comboHtml from './combobox/combobox.html?raw';
+import comboOpts from './combobox/combobox.js?raw';
+import comboCss  from './combobox/combobox.css?inline';
+
 function getObjStr(script: string) {
   // extraxt only inside '{...}'
   return script.replace(/^[\s\S]+export default/, '').replace(/\}[\s;]*$/, '}')
@@ -41,4 +45,5 @@ export default {
   pagination: {in: getObjStr(pgnOpts),     out: pgnHtml,    css: pgnCss},
   qrcode:     {in: getObjStr(qrcodeOpts),  out: qrcodeHtml},
   inputmask:  {in: getObjStr(maskOpts),    out: maskHtml,   css: maskCss},
+  combobox:   {in: getObjStr(comboOpts),   out: comboHtml,  css: comboCss},
 }
