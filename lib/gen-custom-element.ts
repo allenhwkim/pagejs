@@ -146,7 +146,6 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
     `}
   `;
 
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>> str', str);
   return prettier.format(str, {
     parser: 'babel',
     plugins: [parserBabel], 

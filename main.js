@@ -16,11 +16,14 @@ const monacoOptions = { language: 'javascript', scrollBeyondLastLine: false, min
 monaco.editor.create($('#monaco-input'), monacoOptions);
 monaco.editor.create($('#monaco-output'), monacoOptions);
 
+const sessionExample = sessionStorage.getItem('example');
+sessionExample && (document.myform.example.value = sessionExample);
+
+setExample();
+
 $('#show-generated-code').addEventListener('click', () => setTimeout(showGeneratedCode, 300));
 $('#run-code').addEventListener('click', runCode);
 $('#myform').addEventListener('click', setExample);
-
-setExample();
 
 function setExample() {
   const key = document.myform.example.value;
@@ -32,17 +35,16 @@ function setExample() {
   document.myform.in.value = examples[key].in; 
   document.myform.out.value = examples[key].out; 
   document.myform.css.value = examples[key].css || null; 
+  sessionStorage.setItem('example', key);
 }
 
 function getOptions(inputTxt) { // returns customElement(..) options
   const css = document.myform.css.value;
-  console.log({css});
 
   const matches = inputTxt.trim().match(/^.*?CustomElement\(([\s\S]+)\);?$/i);
   if (matches) {
     const optionsTxt = matches[1];
     const options = new Function('css', `a=${optionsTxt}; return a;`)(css);
-    console.log('<>>>>>>>>>>>>>>>>>>>>>>>>>>> options', options);
     return options;
   }
 }
