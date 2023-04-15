@@ -18,6 +18,7 @@ monaco.editor.create($('#monaco-output'), monacoOptions);
 
 $('#show-generated-code').addEventListener('click', () => setTimeout(showGeneratedCode, 300));
 $('#run-code').addEventListener('click', runCode);
+$('#myform').addEventListener('click', setExample);
 
 setExample();
 
@@ -35,18 +36,19 @@ function setExample() {
 
 function getOptions(inputTxt) { // returns customElement(..) options
   const css = document.myform.css.value;
+  console.log({css});
 
   const matches = inputTxt.trim().match(/^.*?CustomElement\(([\s\S]+)\);?$/i);
   if (matches) {
     const optionsTxt = matches[1];
-    const options = new Function(`a=${optionsTxt}; return a;`)();
-    css && (options.css = css);
+    const options = new Function('css', `a=${optionsTxt}; return a;`)(css);
+    console.log('<>>>>>>>>>>>>>>>>>>>>>>>>>>> options', options);
     return options;
   }
 }
 
 function getGeneratedCode(inputTxt) { // returns generated code 
-  const options = getOptions(inputTxt, );
+  const options = getOptions(inputTxt);
   return options && genCustomElement(options, true /* imports */);
 }
 

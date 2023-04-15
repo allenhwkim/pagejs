@@ -27,7 +27,7 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
   const str = /*javascript*/ `
     ${imports ?  `import morphdom from 'morphdom/dist/morphdom-esm';` : ''}
     ${imports && libImports.length ? `import {${libImports.join(', ')}} from './lib';` : ''}
-    ${opts.css ? 'const css = \'' + opts.css + '\';' : ''}
+    ${opts.css ? 'const css = \`' + opts.css + '\`;' : ''}
 
     class ${klassName} extends HTMLElement {
       get attrs() { 
@@ -56,7 +56,7 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
               Object.keys(opts.props)
                 .map(key => {
                   const propVal = opts.props[key];
-                  const val = typeof propVal === 'string' ? `'${propVal}'`: propVal;
+                  const val = typeof propVal === 'function' ? propVal : JSON.stringify(propVal);
                   return `${key}: ${val}`;
                 }).join(',\n')
             }
@@ -146,6 +146,7 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
     `}
   `;
 
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>>> str', str);
   return prettier.format(str, {
     parser: 'babel',
     plugins: [parserBabel], 
