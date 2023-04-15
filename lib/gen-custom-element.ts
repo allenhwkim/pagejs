@@ -51,6 +51,14 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
 
       constructor() {  // called when the element is created.
         super();
+        ${
+          Object.keys(opts)
+            .filter(key => reservedProps.indexOf(key) === -1)
+            .filter(key => typeof opts[key] !== 'function')
+            .map( key => {
+              return `this.${key} = ${JSON.stringify(opts[key])}`;
+            }).join('\n\n')
+        }
 
         ${!opts.props ? '' :`
           this['props'] = {
@@ -125,7 +133,6 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
           .map( key => {
             return opts[key].toString().replace(/^function/, key)
           }).join('\n\n')
-          
       }
 
       ${ !shouldUpdateDom ? '' : `

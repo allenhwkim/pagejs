@@ -20,9 +20,16 @@ import pgnHtml from './pagination/pagination.html?raw';
 import pgnOpts from './pagination/pagination.js?raw';
 import pgnCss  from './pagination/pagination.css?inline';
 
+import qrcodeHtml from './qrcode/qrcode.html?raw';
+import qrcodeOpts from './qrcode/qrcode.js?raw';
+
+import maskHtml from './input-mask/input-mask.html?raw';
+import maskOpts from './input-mask/input-mask.js?raw';
+import maskCss  from './input-mask/input-mask.css?inline';
+
 function getObjStr(script: string) {
   // extraxt only inside '{...}'
-  return script.replace(/^[\s\S]+export default/, '').replace(/}[\s\S]$/, '}')
+  return script.replace(/^[\s\S]+export default/, '').replace(/\}[\s;]*$/, '}')
 }
 ``
 export default {
@@ -32,4 +39,6 @@ export default {
   list:       {in: getObjStr(listOpts),    out: listHtml,   css: listCss},
   map:        {in: getObjStr(mapOpts),     out: mapHtml},
   pagination: {in: getObjStr(pgnOpts),     out: pgnHtml,    css: pgnCss},
+  qrcode:     {in: getObjStr(qrcodeOpts),  out: qrcodeHtml},
+  inputmask:  {in: getObjStr(maskOpts),    out: maskHtml,   css: maskCss},
 }
