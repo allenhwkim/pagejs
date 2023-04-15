@@ -1,13 +1,9 @@
 import prettier from 'prettier/standalone';
 import parserBabel from 'prettier/parser-babel';
-import { addCss, removeCss, loadScript, waitFor} from './util';
 
-export function codeCustomElement(
-  tagName:string, 
-  opts: {[key:string]: any}, 
-  includes = {imports: true, functions: true}
-) {
-  const klassName = tagName.replace(/^[a-z]/, m => m.toUpperCase())
+export function genCustomElement( opts: {[key:string]: any}, imports: boolean = true) {
+  const klassName = (opts.tagName || 'my-custom-element')
+    .replace(/^[a-z]/, m => m.toUpperCase())
     .replace(/-([a-z])/g, (m, w) => w.toUpperCase());
 
   const getFuncBody = (func: Function) => {
@@ -16,22 +12,22 @@ export function codeCustomElement(
   }
 
   const reservedProps = [
-    'props', 'css', 'resolve',
+    'props', 'css', 'resolve', 'tagName',
     'constructorCallback', 'observedAttributes', 'adoptedCallback', 
     'connectedCallback', 'disconnectedCallback', 'attributeChangedCallback', 
   ];
 
   const libImports: string[] = [];
-  if (includes.imports) {
+  if (imports) {
     opts.resolve?.toString().indexOf('loadScript(') && libImports.push('loadScript');
     opts.resolve?.toString().indexOf('waitFor(') && libImports.push('waitFor');
     opts.css && libImports.push('addCss', 'removeCss');
   }
 
   const str = /*javascript*/ `
-    ${includes.imports ?  `import morphdom from 'morphdom/dist/morphdom-esm';` : ''}
-    ${libImports.length ? `import {${libImports.join(', ')}} from './lib';` : ''}
-    ${includes.functions && opts.css ? 'const css = \'' + opts.css + '\';' : ''}
+    ${imports ?  `import morphdom from 'morphdom/dist/morphdom-esm';` : ''}
+    ${imports && libImports.length ? `import {${libImports.join(', ')}} from './lib';` : ''}
+    ${opts.css ? 'const css = \'' + opts.css + '\';' : ''}
 
     class ${klassName} extends HTMLElement {
       get attrs() { 
@@ -59,7 +55,8 @@ export function codeCustomElement(
             ${ 
               Object.keys(opts.props)
                 .map(key => {
-                  const val = typeof opts.props[key] === 'string' ? `'${opts.props[key]}'`: opts.props[key];
+                  const propVal = opts.props[key];
+                  const val = typeof propVal === 'string' ? `'${propVal}'`: propVal;
                   return `${key}: ${val}`;
                 }).join(',\n')
             }
@@ -77,12 +74,12 @@ export function codeCustomElement(
           }
         `}
 
-        ${opts.css ? `addCss('${tagName}', css);`: ''}
         ${ getFuncBody(opts.constructorCallback) } 
       }
     
       async connectedCallback() { // called after the element is attached to the DOM.
         if (!this.isConnected) return; ///  connected(directly or indirectly) to DOM
+        ${opts.css ? `addCss(this.tagName, css);`: ''}
 
         ${
           typeof opts.resolve === 'function' ? `await this.resolve();` : ''
@@ -94,7 +91,7 @@ export function codeCustomElement(
       ${ !(opts.disconnectedCallback || opts.css) ? '': `
         disconnectedCallback() {
           ${ getFuncBody(opts.disconnectedCallback) } 
-          ${ opts.css ? `removeCss('${tagName}');` : ''}
+          ${ opts.css ? `removeCss(this.tagName);` : ''}
         }`
       }
 
@@ -143,9 +140,10 @@ export function codeCustomElement(
 
     }
 
-    if (!customElements.get('${tagName}')) {
-      customElements.define('${tagName}', ${klassName})
-    }
+    ${!opts.tagName ? '': `
+      (!customElements.get('${opts.tagName}')) 
+        && customElements.define('${opts.tagName}', ${klassName});
+    `}
   `;
 
   return prettier.format(str, {

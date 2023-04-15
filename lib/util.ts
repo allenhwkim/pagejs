@@ -2,6 +2,7 @@ import postcss  from 'postcss';
 import prefixer from 'postcss-prefix-selector';
 
 export function addCss(tagName: string, css: string) {
+  tagName = tagName.toLowerCase();
   const plugin =  prefixer({
     prefix: tagName,
     transform(prefix, selector, prefixedSelector, filePath, rule) { 
