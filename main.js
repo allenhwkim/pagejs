@@ -50,8 +50,10 @@ function initExamples() {
     );
   }
   const htmlEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-html-editor');
-  htmlEditor.onDidBlurEditorWidget(function (e) {
-    $('#output-section').innerHTML = htmlEditor.getValue();
+  htmlEditor.onDidBlurEditorWidget(function () {
+    if (document.myform.out.value !== htmlEditor.getValue()) { // only apply if different from org.
+      $('#output-section').innerHTML = htmlEditor.getValue();
+    }
   });
 }
 
