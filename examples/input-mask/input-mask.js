@@ -2,7 +2,7 @@ import css from './input-mask.css?inline';
 
 export default {
   tagName: 'input-mask',
-  shadow: false, // shadow works, but better to styling input from document
+  shadow: false, // shadow works, but better to style from document
   css,
   observedAttributes: ['mask'],
   MASK_EXPR: {
@@ -58,7 +58,6 @@ export default {
 
   constructorCallback() {
     const inputEl = this.host.querySelector('input');
-    console.log('this.attrs', this.attrs)
     this.attrs.mask = this.attrs.mask || 'yyyy-mm-dd';
     if (!inputEl) {
       this.host.innerHTML = 'error: requires <input> element';

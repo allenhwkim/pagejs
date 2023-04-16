@@ -31,12 +31,16 @@ import comboHtml from './combobox/combobox.html?raw';
 import comboOpts from './combobox/combobox.js?raw';
 import comboCss  from './combobox/combobox.css?inline';
 
+import defaultHtml from './hello-world/hello-world.html?raw';
+import defaultOpts from './hello-world/hello-world.js?raw';
+
 function getObjStr(script: string) {
   // extraxt only inside '{...}'
-  return script.replace(/^[\s\S]+export default/, '').replace(/\}[\s;]*$/, '}')
+  return script.replace(/^[\s\S]*export default/, '').replace(/\}[\s;]*$/, '}')
 }
 ``
 export default {
+  default:    {in: getObjStr(defaultOpts),  out: defaultHtml},
   qrcode:     {in: getObjStr(qrcodeOpts),  out: qrcodeHtml},
   barcode:    {in: getObjStr(barcodeOpts), out: barcodeHtml},
   highlight:  {in: getObjStr(hlOpts),      out: hlHtml},

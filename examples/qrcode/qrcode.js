@@ -2,7 +2,6 @@ import { waitFor, loadScript } from '../../lib';
 
 export default {
   tagName: 'my-qrcode',
-  shadow: true,
   observedAttributes: ['value'],
   constructorCallback() {
     loadScript('//unpkg.com/qrcode@1.4.4/build/qrcode.min.js');

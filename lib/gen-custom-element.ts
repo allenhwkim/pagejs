@@ -45,18 +45,15 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
         }`
       }
 
-      constructor() {  // called when the element is created.
-        super();
-        ${
+      constructor() { 
+        super();${
           Object.keys(opts)
             .filter(key => reservedProps.indexOf(key) === -1)
             .filter(key => typeof opts[key] !== 'function')
             .map( key => {
-              return `this.${key} = ${JSON.stringify(opts[key])}`;
+              return `this.${key} = ${JSON.stringify(opts[key])};`;
             }).join('\n\n')
-        }
-
-        ${!opts.props ? '' :`
+        }${!opts.props ? '' :`
           this['props'] = {
             ${ 
               Object.keys(opts.props)
@@ -78,9 +75,7 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
               }
             });
           }
-        `}
-
-        ${ opts.shadow ? `
+        `}${ opts.shadow ? `
           this.host = this.attachShadow({ mode: 'open'});
           const template = document.createElement('template')
           template.innerHTML = this.innerHTML;
@@ -89,17 +84,14 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
         }${ getFuncBody(opts.constructorCallback) } 
       }
     
-      async connectedCallback() { // called after the element is attached to the DOM.
+      async connectedCallback() {
         if (!this.isConnected) return; ///  connected(directly or indirectly) to DOM
         ${opts.css && !opts.shadow ? `addCss(this.tagName, css);`: ''}
         ${opts.css && opts.shadow ? `
           const styleEl = document.createElement('style');
           styleEl.textContent = css;
           this.host.appendChild(styleEl);
-          console.log('...........shadow css injecting', styleEl);
-        `: ''}
-
-        ${ 
+        `: ''}${ 
           getFuncBody(opts.connectedCallback) 
         }${ !shouldUpdateDom ? '' : ` 
           this.#updateDOM.call(this, 'connectedCallback');
@@ -140,14 +132,16 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
       }
 
       ${ !shouldUpdateDom ? '' : `
+        // called when attribute/props changes and connectedCallback
         #timer;
-        #updateDOM(caller) { // called when attribute/props changes and connectedCallback
+        #updateDOM(caller) { 
           clearTimeout(this.#timer);
-          this.#timer = setTimeout(async () => { // run as debounced since it's called from many places
+          // run as debounced since it's called from many places and often
+          this.#timer = setTimeout(async () => { 
             ${typeof opts.render !== 'function' ? '' : `
               const param =  {attrs: this.attrs, props: this['props']};
-              const newHTML = await this.render(param); // render() may not change DOM
-              if (typeof newHTML === 'string') { // tried returing element, but not working
+              const newHTML = await this.render(param);
+              if (typeof newHTML === 'string') {
                 const updated = document.createElement('div');
                 ${opts.css && opts.shadow ? `updated.innerHTML += \`<style>${opts.css}</style>\`;`:''}
                 updated.innerHTML += newHTML;

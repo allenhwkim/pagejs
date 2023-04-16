@@ -2,7 +2,6 @@ import { loadScript, waitFor, fixIndent } from '../../lib';
 
 export default {
   tagName: 'my-highlight',
-  shadow: true, // document hl-js style not injecting into shadow dom
   observedAttributes: ['language'],
   connectedCallback() {
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js');
