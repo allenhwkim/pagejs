@@ -15,7 +15,15 @@ export default {
       this.listTemplate = ulEl.children[0]?.outerHTML;
       ulEl.innerHTML = '';
     }
-    if (!(inputEl && ulEl)) return; // readonly or disabled ones
+    
+    if (!inputEl || (!(inputEl.readOnly || inputEl.disabled) && !ulEl)) {
+      this.host.textContent = 'error: requires <input> and <ul>';
+      return;
+    }
+
+    if (!(inputEl && ulEl)) {
+      return; // readonly or disabled ones
+    }
 
     inputEl.addEventListener('focus', () => this.highlightValue(ulEl, inputEl.value))
 

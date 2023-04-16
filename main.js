@@ -15,9 +15,10 @@ window.MonacoEnvironment = { getWorkerUrl: () => proxy };
 const monacoOptions = { language: 'javascript', scrollBeyondLastLine: false, minimap: {enabled: false}};
 monaco.editor.create($('#monaco-input'), monacoOptions);
 monaco.editor.create($('#monaco-output'), monacoOptions);
+monaco.editor.create($('#monaco-html-editor'), {...monacoOptions, language: 'html'});
 
-initExamples();
-setExample();
+initExamples(); // set radio buttons for all examples
+setExample();   // show code and result
 
 $('#show-generated-code').addEventListener('click', () => setTimeout(showGeneratedCode, 300));
 $('#run-code').addEventListener('click', runCode);
@@ -29,6 +30,7 @@ function setExample() {
   const inputCode = fixIndent(`customElement(${examples[key].in})`);
   const inputEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-input');
   inputEditor.setValue(inputCode);
+
 
   document.myform.in.value = examples[key].in; 
   document.myform.out.value = examples[key].out; 
@@ -47,6 +49,10 @@ function initExamples() {
       ` <input type="radio" name="example" value="${key}" ${checked}/> ${key}`
     );
   }
+  const htmlEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-html-editor');
+  htmlEditor.onDidBlurEditorWidget(function (e) {
+    $('#output-section').innerHTML = htmlEditor.getValue();
+  });
 }
 
 function getOptions(inputTxt) { // returns customElement(..) options
@@ -88,7 +94,9 @@ function runCode() {
     customElement(options, false); // define custom element
 
     $('#output-section').innerHTML = document.myform.out.value;
-    $('#output-html').innerText = document.myform.out.value;
+    const htmlEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-html-editor');
+    htmlEditor.setValue(document.myform.out.value);
+    htmlEditor.layout();
   } else {
     alert('Invalid source. It must be wrapped with customElement() function');
   }
