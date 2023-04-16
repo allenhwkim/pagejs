@@ -46,7 +46,7 @@ function initExamples() {
     const checked = key === sessionExample ? 'checked' : '';
     document.myform.insertAdjacentHTML(
       'beforeend',
-      ` <input type="radio" name="example" value="${key}" ${checked}/> ${key}`
+      `<label><input type="radio" name="example" value="${key}" ${checked}/> ${key}</label>`
     );
   }
   const htmlEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-html-editor');

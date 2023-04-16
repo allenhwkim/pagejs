@@ -37,10 +37,10 @@ function getObjStr(script: string) {
 }
 ``
 export default {
-  map:        {in: getObjStr(mapOpts),     out: mapHtml},
-  highlight:  {in: getObjStr(hlOpts),      out: hlHtml},
-  barcode:    {in: getObjStr(barcodeOpts), out: barcodeHtml},
   qrcode:     {in: getObjStr(qrcodeOpts),  out: qrcodeHtml},
+  barcode:    {in: getObjStr(barcodeOpts), out: barcodeHtml},
+  highlight:  {in: getObjStr(hlOpts),      out: hlHtml},
+  map:        {in: getObjStr(mapOpts),     out: mapHtml},
   pagination: {in: getObjStr(pgnOpts),     out: pgnHtml,    css: pgnCss},
   file:       {in: getObjStr(fileOpts),    out: fileHtml,   css: fileCss},
   list:       {in: getObjStr(listOpts),    out: listHtml,   css: listCss},
