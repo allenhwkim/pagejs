@@ -4,8 +4,6 @@ export default {
   tagName: 'my-barcode',
   shadow: true,
   async resolve() {
-    loadScript('//unpkg.com/jsbarcode/dist/JsBarcode.all.min.js');
-    await waitFor('window.JsBarcode');
   },
   observedAttributes: ['value', 'format'],
   props : {
@@ -22,12 +20,16 @@ export default {
     fontOptions: 'bold',
   },
   css: 'hello {background: #ccc;}',
-  connectedCallback() {
+  constructorCallback() {
+    loadScript('//unpkg.com/jsbarcode/dist/JsBarcode.all.min.js');
     this.host.innerHTML = '<svg></svg>';
   },
-  render({attrs, props}) { 
+  async render({attrs, props}) { 
+    await waitFor('window.JsBarcode');
     const value = attrs.value || '123456789012'; 
     const format = attrs.format || 'code128';
-    window['JsBarcode'](this.host.firstChild, value, {...props, format});
+    const svgEl = document.createElement('svg');
+    window['JsBarcode'](svgEl, value, {...props, format});
+    return svgEl;
   }
 }

@@ -2,24 +2,19 @@ import { loadScript, waitFor, fixIndent } from '../../lib';
 
 export default {
   tagName: 'my-highlight',
-  shadow: false, // document hl-js style not injecting into shadow dom
-  async resolve () {
-    loadScript(
-      'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css',
-    );
-    await waitFor('window.hljs');
-  },
-  css: `
-    :host {display: block; font-family: monospace; white-space: pre;}
-    :host pre.hljs {background: #F0F0F0; padding: 12px;}
-  `,
+  shadow: true, // document hl-js style not injecting into shadow dom
   observedAttributes: ['language'],
   connectedCallback() {
-    const code = this.innerHTML;
-    const language = this.getAttribute('language') || 'javascript';
-    this.host.innerHTML = '<pre language="'+language+'"></pre>';
-    this.host.querySelector('pre').innerHTML = fixIndent(code);
-    window['hljs'].highlightElement(this.host.querySelector('pre'));
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js');
+  },
+  async render({attrs}) {
+    await waitFor('window.hljs');
+
+    const source = fixIndent(this.host.textContent);
+    const language = attrs.language || 'javascript';
+    const highlighted = window['hljs'].highlight(source, {language}).value;
+    return `
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css" />
+      <pre style="padding: 12px; background: #F0F0F0" language="${language}">${highlighted}</pre>`;
   }
 };

@@ -2,23 +2,27 @@ import css from './file.css?inline';
 
 export default {
   tagName: 'my-file',
+  shadow: true,
   css, 
+  observedAttribures: ['message'],
   props: {
-    message: 'Click, copy/paste files, or drag/drop files here. The selected files are displayed below.',
-    files: [],
+    files: [], // when changed, renders html
   },
-  render({props}) {
+  files: [],
+  render({attrs, props}) {
     const formatSize = (bytes, decimalPoint = 2) => {
       const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
       const i = Math.floor(Math.log(bytes) / Math.log(1000));
       return parseFloat((bytes / Math.pow(1000, i))
         .toFixed(decimalPoint)) + ' ' + sizes[i];
     };
+    const message = attrs.message || 
+      'Click, copy/paste files, or drag/drop files here. The selected files are displayed below.';
 
     return `
       <label class="x-file-input">
         <input type="file" multiple />
-        <div class="x-slot">${props.message}</div>
+        <div class="x-slot">${message}</div>
       </label>
       <div class="x-file-list">${props.files.map( (file, ndx) => {
         return `

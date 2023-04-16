@@ -3,13 +3,13 @@ import { customElement, loadScript, waitFor } from '../../lib';
 export default {
   tagName: 'my-map',
   shadow: false, // document-level ol.css not applying into shadow dom.
-  async resolve() {
-    loadScript('//cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js', '//cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css');
-    await waitFor('window.ol');
-  },
   css: ':host {display: block; height: 300px;}',
   observedAttributes: ['center', 'zoom'],
-  render({attrs}) {
+  constructorCallback() {
+    loadScript('//cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js', '//cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css');
+  },
+  async render({attrs}) {
+    await waitFor('window.ol');
     const {center='Brampton Ontario, Canada', zoom= 11} = attrs;
 
     this.getLonLat(center).then(lonLat => {

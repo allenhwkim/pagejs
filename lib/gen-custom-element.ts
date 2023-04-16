@@ -155,16 +155,14 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
             ${typeof opts.render !== 'function' ? '' : `
               const param =  {attrs: this.attrs, props: this['props']};
               const newHTML = await this.render(param); // render() may not change DOM
-              if (newHTML !== undefined) { 
-                const updated = document.createElement('div')
-                updated.innerHTML = await newHTML;
-                ${opts.css && opts.shadow ? `
-                  if (this.shadow) { // preserve isolated style
-                    updated.innerHTML += '<style>' + css + '</style>';
-                  }
-                `:''}
-                morphdom( this.host /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
+              const updated = document.createElement('div')
+              ${opts.css && opts.shadow ? `updated.innerHTML += \`<style>${opts.css}</style>\`;`:''}
+              if (newHTML instanceof HTMLElement) {
+                updated.replaceChildren(newHTML);
+              } else if (typeof newHTML === 'string') {
+                updated.innerHTML += newHTML;
               }
+              newHTML &&  morphdom( this.host /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
             `}
         }, 100);
       `}

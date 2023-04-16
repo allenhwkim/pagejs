@@ -3,7 +3,7 @@ import css from './combobox.css?inline';
 
 export default {
   tagName: 'my-combobox',
-  shadow: false, // true works, but better to follow document input styling
+  shadow: false, // shadow works, but better to follow document input styling
   props: { listTemplate: '' },
   css,
   constructorCallback() { 
