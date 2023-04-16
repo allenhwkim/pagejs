@@ -12,16 +12,14 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
   }
 
   const reservedProps = [
-    'props', 'css', 'resolve', 'tagName',
+    'props', 'css', 'tagName',
     'constructorCallback', 'observedAttributes', 'adoptedCallback', 
     'connectedCallback', 'disconnectedCallback', 'attributeChangedCallback', 
   ];
 
   const libImports: string[] = [];
   if (imports) {
-    opts.resolve?.toString().indexOf('loadScript(') && libImports.push('loadScript');
-    opts.resolve?.toString().indexOf('waitFor(') && libImports.push('waitFor');
-    opts.css && libImports.push('addCss', 'removeCss');
+    libImports.push('loadScript', 'waitFor', 'addCss', 'removeCss');
   }
 
   const shouldUpdateDom = opts.observedAttributes || opts.render || opts.props;
@@ -46,8 +44,6 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
           return [${opts.observedAttributes.map(el => `'${el}'`).join(', ')}];
         }`
       }
-
-      ${ typeof opts.resolve === 'function' ? opts.resolve: '' } 
 
       constructor() {  // called when the element is created.
         super();
@@ -103,9 +99,7 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
           console.log('...........shadow css injecting', styleEl);
         `: ''}
 
-        ${
-          typeof opts.resolve === 'function' ? `await this.resolve();` : ''
-        }${ 
+        ${ 
           getFuncBody(opts.connectedCallback) 
         }${ !shouldUpdateDom ? '' : ` 
           this.#updateDOM.call(this, 'connectedCallback');
@@ -122,9 +116,7 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
       ${ !opts.observedAttributes ? '' : `
         async attributeChangedCallback(name, oldValue, newValue) {
           if (oldValue !== newValue) {
-            ${
-              typeof opts.resolve === 'function' ? 'await this.resolve();' : '' 
-            }${ 
+            ${ 
               getFuncBody(opts.attributeChangedCallback) 
             }${ !shouldUpdateDom ? '' : ` 
               this.#updateDOM.call(this, 'attributeChangedCallback');

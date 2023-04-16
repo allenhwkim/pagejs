@@ -3,8 +3,6 @@ import {loadScript, waitFor} from '../../lib';
 export default {
   tagName: 'my-barcode',
   shadow: true,
-  async resolve() {
-  },
   observedAttributes: ['value', 'format'],
   props : {
     width: 1,

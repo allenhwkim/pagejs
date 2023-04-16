@@ -2,7 +2,7 @@ import css from './input-mask.css?inline';
 
 export default {
   tagName: 'input-mask',
-  shadow: true,
+  shadow: false, // shadow works, but better to styling input from document
   css,
   observedAttributes: ['mask'],
   MASK_EXPR: {
