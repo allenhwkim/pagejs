@@ -18,7 +18,6 @@ monaco.editor.create($('#monaco-output'), monacoOptions);
 
 initExamples();
 setExample();
-runCode();
 
 $('#show-generated-code').addEventListener('click', () => setTimeout(showGeneratedCode, 300));
 $('#run-code').addEventListener('click', runCode);
@@ -41,6 +40,8 @@ function setExample() {
   document.myform.out.value = examples[key].out; 
   document.myform.css.value = examples[key].css || null; 
   sessionStorage.setItem('example', key);
+  
+  runCode();
 }
 
 function initExamples() {
