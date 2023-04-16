@@ -2,10 +2,11 @@ import css from './list.css?inline';
 
 export default {
   tagName: 'my-list',
+  shadow: true,
   css, 
   observedAttributes: ['selected', 'expanded'],
   constructorCallback() {
-    this.addEventListener('keydown', this.keydownHandler);
+    this.host.addEventListener('keydown', e => this.keydownHandler(e));
   },
   render({attrs}) {
     this.init(attrs.expanded === 'true');
@@ -48,7 +49,7 @@ export default {
       el.classList.add('x2-highlighted');
     }
 
-    const ulEl = this.querySelector('ul');
+    const ulEl = this.host.querySelector('ul');
     ulEl.setAttribute('tabindex', '0');
     ulEl.querySelectorAll('li > ul, li > * > ul').forEach(el => {
       const liEl = el.closest('li');
@@ -66,7 +67,7 @@ export default {
     });
   },
   initHighlightAndSelect(selected) {
-    const ulEl = this.querySelector('ul');
+    const ulEl = this.host.querySelector('ul');
     const liEl = ulEl.querySelector('#'+ selected || 'unknown');
     if (liEl) {
       liEl.classList.add('x2-highlighted');

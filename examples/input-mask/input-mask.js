@@ -2,6 +2,7 @@ import css from './input-mask.css?inline';
 
 export default {
   tagName: 'input-mask',
+  shadow: true,
   css,
   observedAttributes: ['mask'],
   MASK_EXPR: {
@@ -56,11 +57,11 @@ export default {
   },
 
   constructorCallback() {
-    const inputEl = this.querySelector('input');
+    const inputEl = this.host.querySelector('input');
     console.log('this.attrs', this.attrs)
     this.attrs.mask = this.attrs.mask || 'yyyy-mm-dd';
     if (!inputEl) {
-      this.innerHTML = 'error: requires <input> element';
+      this.host.innerHTML = 'error: requires <input> element';
       return;
     }
     inputEl.insertAdjacentElement('afterend', document.createElement('div'));
@@ -71,8 +72,8 @@ export default {
   },
 
   render({attrs}) {
-    const inputEl = this.querySelector('input');
-    const maskEl =  this.querySelector('input + div');
+    const inputEl = this.host.querySelector('input');
+    const maskEl =  this.host.querySelector('input + div');
     const inputElStyle = getComputedStyle(inputEl);
 
     maskEl.classList.add('mask');
@@ -87,15 +88,15 @@ export default {
   },
 
   setMaskElText() {
-    const inputEl = this.querySelector('input');
-    const maskEl =  this.querySelector('input + div');
+    const inputEl = this.host.querySelector('input');
+    const maskEl =  this.host.querySelector('input + div');
     maskEl.innerText = 
       ' '.repeat(inputEl.value.length) +
       (''+this.attrs.mask).substring(inputEl.value.length);
   },
   
   addNextMask() {
-    const inputEl = this.querySelector('input');
+    const inputEl = this.host.querySelector('input');
     const maskArr = (''+this.attrs.mask).split('');
 
     setTimeout( () => { // to handle keydown and input event, this performs after input event
@@ -109,7 +110,7 @@ export default {
   },
 
   handlePaste(event) {
-    const inputEl = this.querySelector('input');
+    const inputEl = this.host.querySelector('input');
 
     inputEl.value = this.format(event.clipboardData.getData('text'), this.attrs.mask);
     this.setMaskElText();
@@ -117,7 +118,7 @@ export default {
   },
 
   handleKeyDown(event) {
-    const inputEl = this.querySelector('input');
+    const inputEl = this.host.querySelector('input');
     const inputChar = event.key;
     const matchingMask = (''+this.attrs.mask).split('')[inputEl.value.length];
 

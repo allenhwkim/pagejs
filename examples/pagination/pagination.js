@@ -2,12 +2,12 @@
 
  export default {
   tagName: 'my-pagination',
+  shadow: true,
   css,
   observedAttributes: ['total', 'index', 'numPerPage', 'numPages'], // index is the current page
   constructorCallback() {
-    this.addEventListener('click', (event) => {
+    this.host.addEventListener('click', (event) => {
       const clickedEl = event.target;
-      console.log('.......click', clickedEl.classList.contains('page'));
       if (clickedEl.classList.contains('page')) { 
         this.setAttribute('index', clickedEl.getAttribute('index')); // cause re-rendering
   
@@ -19,8 +19,6 @@
     });
   },
   render({attrs, props}) {
-    console.log(JSON.stringify({attrs}));
-    
     (attrs.numPages % 2 === 0) && attrs.numPages++; // make it odd number
     const {total=100, index=0, numPerPage=10, numPages=5} = attrs;
 
@@ -28,7 +26,6 @@
     const [pages0, pagesX] = [pages[0], pages.slice(-1)[0]];
     const pages0Index = (pages0 -1) * numPerPage;
     const pagesXIndex =  (pagesX -1) * numPerPage;
-    console.log('.........pages', index, pages)
 
     const fDisabled = !(pages0Index > numPerPage) ? 'disabled' : '';
     const pDisabled = !(pages0Index > 0) ? 'disabled' : '';

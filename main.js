@@ -23,12 +23,6 @@ $('#show-generated-code').addEventListener('click', () => setTimeout(showGenerat
 $('#run-code').addEventListener('click', runCode);
 $('#myform').addEventListener('click', setExample);
 
-window.srcFunc = function(search) {
-  return fetch('https://dummyjson.com/products/search?q='+search)
-    .then(res => res.json())
-    .then(res => res.products || [])
-}
-
 function setExample() {
   const key = document.myform.example.value;
 

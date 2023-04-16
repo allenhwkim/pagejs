@@ -3,11 +3,12 @@ import css from './combobox.css?inline';
 
 export default {
   tagName: 'my-combobox',
+  shadow: false, // true works, but better to follow document input styling
   props: { listTemplate: '' },
   css,
   constructorCallback() { 
-    const inputEl = this.querySelector('input');
-    const ulEl = this.querySelector('ul');
+    const inputEl = this.host.querySelector('input');
+    const ulEl = this.host.querySelector('ul');
     const attrPropName = this.getAttribute('src');
     const srcFunc = attrPropName ? (this[attrPropName] || globalThis[attrPropName]) :  getReactProp(this, 'src');
     if (srcFunc && ulEl) {
@@ -25,13 +26,13 @@ export default {
     });
 
     inputEl.addEventListener('keydown', (event) => {
-      const highlightedEl = this.querySelector('.x-highlighted:not(.hidden)');
+      const highlightedEl = this.host.querySelector('.x-highlighted:not(.hidden)');
       if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(event.key)) {
         if      (event.key === 'ArrowDown') { this.highlightNext( ulEl, 1); }
         else if (event.key === 'ArrowUp') { this.highlightNext( ulEl, -1); } 
         else if (event.key === 'Escape') { inputEl.blur(); }
         else if (event.key === 'Enter') { 
-          this.querySelector('.x-selected')?.classList.remove('x-selected');
+          this.host.querySelector('.x-selected')?.classList.remove('x-selected');
           this.selectHandler(event, inputEl, highlightedEl);
         }
         event.preventDefault();

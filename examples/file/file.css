@@ -13,8 +13,7 @@
   }
 }
 
-.x-file-list:not(:empty) {
-  border-top: 1px solid #CCC; 
+.x-file-list {
   color: #666;
   .x-file { /* file info */
     display: flex;
@@ -22,6 +21,9 @@
     position: relative;
     justify-content: space-between;
 
+    &:first-child {
+      border-top: 1px solid #ccc;
+    }
     &:not(:last-child) {
       border-bottom: 1px solid #ccc;
     }

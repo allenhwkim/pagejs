@@ -2,9 +2,10 @@
   display: inline-block;
   position: relative;
 
-  &:focus-within ul {
-    display: block;
-  }
+}
+
+input:focus ~ ul {
+  display: block;
 }
 
 input {

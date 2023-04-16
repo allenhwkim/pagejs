@@ -2,6 +2,7 @@ import {loadScript, waitFor} from '../../lib';
 
 export default {
   tagName: 'my-barcode',
+  shadow: true,
   async resolve() {
     loadScript('//unpkg.com/jsbarcode/dist/JsBarcode.all.min.js');
     await waitFor('window.JsBarcode');
@@ -22,11 +23,11 @@ export default {
   },
   css: 'hello {background: #ccc;}',
   connectedCallback() {
-    this.innerHTML = '<svg></svg>';
+    this.host.innerHTML = '<svg></svg>';
   },
   render({attrs, props}) { 
     const value = attrs.value || '123456789012'; 
     const format = attrs.format || 'code128';
-    window['JsBarcode'](this.firstChild, value, {...props, format});
+    window['JsBarcode'](this.host.firstChild, value, {...props, format});
   }
 }

@@ -7,9 +7,6 @@ export default {
     message: 'Click, copy/paste files, or drag/drop files here. The selected files are displayed below.',
     files: [],
   },
-  constructorCallback() {
-    this.message = this.innerText.trim() || this.message; // save user's message
-  },
   render({props}) {
     const formatSize = (bytes, decimalPoint = 2) => {
       const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -41,18 +38,20 @@ export default {
       }).join('\n')}</div>`;
   },
   connectedCallback() {
-    this.addEventListener('dragover', this.dragoverHandler.bind(this));
-    this.addEventListener('dragleave', this.dragleaveHandler.bind(this));
-    this.addEventListener('change', this.setFiles.bind(this)); 
-    this.addEventListener('drop', (evt) => {
+    this.message = this.host.innerHTML.trim() || this.message; // save user's message
+
+    this.host.addEventListener('dragover', this.dragoverHandler.bind(this));
+    this.host.addEventListener('dragleave', this.dragleaveHandler.bind(this));
+    this.host.addEventListener('change', this.setFiles.bind(this)); 
+    this.host.addEventListener('drop', (evt) => {
       this.dragleaveHandler(evt);
       this.setFiles(evt);
     });
-    this.addEventListener('paste', (evt) => {
+    this.host.addEventListener('paste', (evt) => {
       this.dragleaveHandler(evt);
       this.setFiles(evt);
     });
-    this.addEventListener('click', (event) => { // delete clicked
+    this.host.addEventListener('click', (event) => { // delete clicked
       if (!event.target.classList.contains('x-delete')) return;
       this.files.splice(this.files.indexOf(+event.target.dataset.id), 1);
       event.target.closest('.x-file').remove();

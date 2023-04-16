@@ -2,6 +2,7 @@ import { loadScript, waitFor, fixIndent } from '../../lib';
 
 export default {
   tagName: 'my-highlight',
+  shadow: false, // document hl-js style not injecting into shadow dom
   async resolve () {
     loadScript(
       'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js',
@@ -17,8 +18,8 @@ export default {
   connectedCallback() {
     const code = this.innerHTML;
     const language = this.getAttribute('language') || 'javascript';
-    this.innerHTML = '<pre language="'+language+'"></pre>';
-    this.querySelector('pre').innerHTML = fixIndent(code);
-    window['hljs'].highlightElement(this.querySelector('pre'));
+    this.host.innerHTML = '<pre language="'+language+'"></pre>';
+    this.host.querySelector('pre').innerHTML = fixIndent(code);
+    window['hljs'].highlightElement(this.host.querySelector('pre'));
   }
 };

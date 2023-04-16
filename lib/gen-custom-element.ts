@@ -84,12 +84,24 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
           }
         `}
 
-        ${ getFuncBody(opts.constructorCallback) } 
+        ${ opts.shadow ? `
+          this.host = this.attachShadow({ mode: 'open'});
+          const template = document.createElement('template')
+          template.innerHTML = this.innerHTML;
+          this.host.appendChild(template.content.cloneNode(true));
+        `: `this.host = this;`
+        }${ getFuncBody(opts.constructorCallback) } 
       }
     
       async connectedCallback() { // called after the element is attached to the DOM.
         if (!this.isConnected) return; ///  connected(directly or indirectly) to DOM
-        ${opts.css ? `addCss(this.tagName, css);`: ''}
+        ${opts.css && !opts.shadow ? `addCss(this.tagName, css);`: ''}
+        ${opts.css && opts.shadow ? `
+          const styleEl = document.createElement('style');
+          styleEl.textContent = css;
+          this.host.appendChild(styleEl);
+          console.log('...........shadow css injecting', styleEl);
+        `: ''}
 
         ${
           typeof opts.resolve === 'function' ? `await this.resolve();` : ''
@@ -146,7 +158,12 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
               if (newHTML !== undefined) { 
                 const updated = document.createElement('div')
                 updated.innerHTML = await newHTML;
-                morphdom( this /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
+                ${opts.css && opts.shadow ? `
+                  if (this.shadow) { // preserve isolated style
+                    updated.innerHTML += '<style>' + css + '</style>';
+                  }
+                `:''}
+                morphdom( this.host /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
               }
             `}
         }, 100);
