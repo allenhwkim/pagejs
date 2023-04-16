@@ -147,14 +147,12 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
             ${typeof opts.render !== 'function' ? '' : `
               const param =  {attrs: this.attrs, props: this['props']};
               const newHTML = await this.render(param); // render() may not change DOM
-              const updated = document.createElement('div')
-              ${opts.css && opts.shadow ? `updated.innerHTML += \`<style>${opts.css}</style>\`;`:''}
-              if (newHTML instanceof HTMLElement) {
-                updated.replaceChildren(newHTML);
-              } else if (typeof newHTML === 'string') {
+              if (typeof newHTML === 'string') { // tried returing element, but not working
+                const updated = document.createElement('div');
+                ${opts.css && opts.shadow ? `updated.innerHTML += \`<style>${opts.css}</style>\`;`:''}
                 updated.innerHTML += newHTML;
+                morphdom( this.host /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
               }
-              newHTML &&  morphdom( this.host /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
             `}
         }, 100);
       `}

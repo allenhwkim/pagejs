@@ -17,10 +17,8 @@ export default {
     textMargin: 2,
     fontOptions: 'bold',
   },
-  css: 'hello {background: #ccc;}',
   constructorCallback() {
     loadScript('//unpkg.com/jsbarcode/dist/JsBarcode.all.min.js');
-    this.host.innerHTML = '<svg></svg>';
   },
   async render({attrs, props}) { 
     await waitFor('window.JsBarcode');
@@ -28,6 +26,6 @@ export default {
     const format = attrs.format || 'code128';
     const svgEl = document.createElement('svg');
     window['JsBarcode'](svgEl, value, {...props, format});
-    return svgEl;
+    return svgEl.outerHTML;
   }
 }
