@@ -1,6 +1,6 @@
 
 import barcodeHtml from './barcode/barcode.html?raw';
-import barcodeOpts from './barcode/barcode.ts?raw';
+import barcodeOpts from './barcode/barcode.js?raw';
 
 import fileHtml from './file/file.html?raw';
 import fileOpts from './file/file.js?raw';
