@@ -21,11 +21,11 @@ export function removeCss(tagName: string) {
 
 export function loadScript(...urls) {
   Array.from(urls).forEach(url => {
-    if (url.endsWith('.js')) {
+    if (url.endsWith('.js') && !document.querySelector(`script[src="${url}"]`)) {
       const el = document.createElement('script');
       el.setAttribute('src', url);
       document.head.appendChild(el);
-    } else if (url.endsWith('.css')) {
+    } else if (url.endsWith('.css') && !document.querySelector(`link[href="${url}"]`)) {
       const el = document.createElement('link');
       el.setAttribute('rel', 'stylesheet');
       el.setAttribute('href', url);

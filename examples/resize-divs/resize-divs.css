@@ -1,0 +1,15 @@
+:host { 
+  display: block; 
+  border: 1px dashed #CCC; 
+}
+:host:has(.resize-bar.active) { user-select: none; }
+
+:host[width] { display: flex; }
+:host[width] > :not(.resize-bar) { width: 33%; }
+:host[width] > .resize-bar { cursor: col-resize ; width: 2px;}
+:host[height] > .resize-bar { cursor: row-resize; height: 2px;}
+
+:host > :not(.resize-bar) { overflow: hidden; padding: 1em; }
+:host > .resize-bar { background: #CCC; display: block; }
+:host > .resize-bar:is(.active, :hover) { background: #00F; }
+

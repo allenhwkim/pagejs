@@ -121,5 +121,6 @@ export function runCode() {
 
   htmlEditor.setValue(newHTML);
   htmlEditor.layout();
+
   $('#output-section').innerHTML = htmlEditor.getValue();
 }
