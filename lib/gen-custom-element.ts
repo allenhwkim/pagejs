@@ -148,10 +148,9 @@ export function genCustomElement( opts: {[key:string]: any}, imports: boolean = 
                 morphdom( this.host /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
               }
             `}
-        }, 100);
+          }, 100);
+        }
       `}
-      }
-
     }
 
     ${!opts.tagName ? '': `

@@ -34,11 +34,15 @@ import comboCss  from './combobox/combobox.css?inline';
 import defaultHtml from './hello-world/hello-world.html?raw';
 import defaultOpts from './hello-world/hello-world.js?raw';
 
+import resizeHtml from './resize-divs/resize-divs.html?raw';
+import resizeOpts from './resize-divs/resize-divs.js?raw';
+import resizeCss  from './resize-divs/resize-divs.css?inline';
+
 function getObjStr(script: string) {
   // extraxt only inside '{...}'
   return script.replace(/^[\s\S]*export default/, '').replace(/\}[\s;]*$/, '}')
 }
-``
+
 export default {
   default:    {in: getObjStr(defaultOpts),  out: defaultHtml},
   qrcode:     {in: getObjStr(qrcodeOpts),  out: qrcodeHtml},
@@ -50,4 +54,5 @@ export default {
   list:       {in: getObjStr(listOpts),    out: listHtml,   css: listCss},
   inputmask:  {in: getObjStr(maskOpts),    out: maskHtml,   css: maskCss},
   combobox:   {in: getObjStr(comboOpts),   out: comboHtml,  css: comboCss},
+  resize:     {in: getObjStr(resizeOpts),  out: resizeHtml, css: resizeCss},
 }

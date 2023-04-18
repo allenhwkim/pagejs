@@ -2,14 +2,16 @@ import { TouchSwipe } from '../../lib';
 import css from './resize-divs.css?inline';
 
 export default {
+  tagName: 'resize-divs',
   touchStart: undefined,
   css,
   constructorCallback() {
-    document.addEventListener('x-swipe', this.resizeListener);
+    this.swipeListener = this.resizeListener.bind(this);
+    document.addEventListener('x-swipe', this.swipeListener);
   },
   connectedCallback() {
     // insert touch listening <div class="resize-bar"> between each element
-    Array.from(this.children).slice(0, -1).forEach(el => {
+    [...this.children].slice(0, -1).forEach(el => { // except the last one
       const resizeBarEl = document.createElement('div');
       resizeBarEl.classList.add('resize-bar');
       new TouchSwipe(resizeBarEl);
@@ -46,6 +48,6 @@ export default {
     } 
   },
   disconnectedCallback() {
-    document.removeEventListener('x-swipe', this.resizeListener);
+    document.removeEventListener('x-swipe', this.swipeListener);
   }
 }

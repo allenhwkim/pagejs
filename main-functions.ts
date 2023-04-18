@@ -44,17 +44,21 @@ export function initExamples() {
 // set code for input editor and run selected
 export function setExampleAndRun() {
   const key = (document as any).myform.example.value;
+  if (examples[key]) {
+    sessionStorage.setItem('example', key);
 
-  const inputCode = fixIndent(`customElement(${examples[key].in})`);
-  const inputEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-input');
-  inputEditor.setValue(inputCode);
+    const inputCode = fixIndent(`customElement(${examples[key].in})`);
+    const inputEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-input');
+    inputEditor.setValue(inputCode);
 
-  (document as any).myform.in.value = examples[key].in; 
-  (document as any).myform.out.value = examples[key].out; 
-  (document as any).myform.css.value = examples[key].css || null; 
-  sessionStorage.setItem('example', key);
-  
-  runCode();
+    (document as any).myform.in.value = examples[key].in; 
+    (document as any).myform.out.value = examples[key].out; 
+    (document as any).myform.css.value = examples[key].css || null; 
+    runCode();
+  } else {
+    sessionStorage.removeItem('example');
+    console.error('error: cannot find an example to run', key);
+  }
 }
 
 // returns options object from js text
