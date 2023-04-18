@@ -122,5 +122,16 @@ export function runCode() {
   htmlEditor.setValue(newHTML);
   htmlEditor.layout();
 
-  $('#output-section').innerHTML = htmlEditor.getValue();
+  // create a temp el., insert script tag first, then insert other tags
+  $('#output-section').innerHTML = ''; 
+  const divEl:any = document.createElement('div');
+  divEl.innerHTML = htmlEditor.getValue();
+  divEl.querySelectorAll("script").forEach((scriptEl:any) => {
+    const newEl = document.createElement("script");
+    [...scriptEl.attributes].forEach(attr => newEl.setAttribute(attr.name, attr.value));
+    newEl.appendChild(document.createTextNode(scriptEl.innerHTML));
+    $('#output-section').appendChild(newEl, scriptEl); // insert all script tags first
+    newEl.remove();
+  });
+  [...divEl.children].forEach(el => $('#output-section').appendChild(el));
 }

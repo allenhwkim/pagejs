@@ -1,3 +1,11 @@
+  <script>
+    window.srcFunc = function(search) {
+      return fetch('https://dummyjson.com/products/search?q='+search)
+        .then(res => res.json())
+        .then(res => res.products || [])
+    };
+  </script>
+
   <my-combobox>
     <input placeholder="Choose one value" autoComplete="off" defaultValue="Hello World" />
     <ul>
@@ -31,13 +39,6 @@
   </my-combobox>
   <p></p>
 
-  <script>
-    window.srcFunc = function(search) {
-      return fetch('https://dummyjson.com/products/search?q='+search)
-        .then(res => res.json())
-        .then(res => res.products || [])
-    }
-  </script>
   <p>Dropdown from HTTP asynchronous search</p>
   <my-combobox src="srcFunc">
     <input placeholder="Search a product in the world" size="40"/>

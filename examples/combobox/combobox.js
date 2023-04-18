@@ -6,7 +6,7 @@ export default {
   shadow: false, // shadow works, but better to follow document input styling
   props: { listTemplate: '' },
   css,
-  constructorCallback() { 
+  connectedCallback() { 
     const inputEl = this.host.querySelector('input');
     const ulEl = this.host.querySelector('ul');
     const attrPropName = this.getAttribute('src');
