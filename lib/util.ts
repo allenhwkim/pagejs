@@ -9,7 +9,7 @@ export function addCss(tagName: string, css: string) {
       return selector.match(/^:host/) ? selector.replace(/:host/, prefix): `${prefix} ${selector}`;
     },
   });
-  const scopedCss = postcss().use(plugin).process(css).css;
+  const scopedCss = postcss().use(plugin).process(css, {map: false}).css;
   !(document.querySelector(`style[${tagName}]`)) &&
     document.head.insertAdjacentHTML('beforeend', `<style ${tagName}>${scopedCss}</style>`);
 }
