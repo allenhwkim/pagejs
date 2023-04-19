@@ -1,5 +1,6 @@
 import './style.css';
 import { initMonacoEditors, initExamples, setExampleAndRun, showGeneratedCode, runCode} from './main-functions';
+import pages from './pages.json'
 
 const $ = document.querySelector.bind(document);
 
