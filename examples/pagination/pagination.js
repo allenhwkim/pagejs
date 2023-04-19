@@ -4,23 +4,33 @@
   tagName: 'my-pagination',
   shadow: true,
   css,
-  observedAttributes: ['total', 'index', 'numPerPage', 'numPages'], // index is the current page
+  props: {
+    index: 0
+  }, 
+  observedAttributes: ['total', 'page', 'numPerPage', 'numPages'],
   constructorCallback() {
-    this.host.addEventListener('click', (event) => {
-      const clickedEl = event.target;
-      if (clickedEl.classList.contains('page')) { 
-        this.setAttribute('index', clickedEl.getAttribute('index')); // cause re-rendering
-  
-        const {index=0, numPerPage=5, total=100} = this.attrs;
-        const customEvent = 
-          new CustomEvent('select', {bubbles: true, detail: {index, numPerPage, total}});
-        this.dispatchEvent(customEvent);
-      }
-    });
+    this.host.addEventListener('click', this.clickListener.bind(this));
+  },
+  clickListener(event) {
+    if (event.target.classList.contains('page')) { 
+      this.index = +event.target.getAttribute('index');
+      const detail = {...this.attrs, index: this.index};
+      this.dispatchEvent(new CustomEvent('select', {bubbles: true, detail}));
+    }
   },
   render({attrs, props}) {
-    (attrs.numPages % 2 === 0) && attrs.numPages++; // make it odd number
-    const {total=100, index=0, numPerPage=10, numPages=5} = attrs;
+    for (var key in attrs) {
+      const isObservedAttr = this.constructor.observedAttributes.includes(key);
+      const isValidNum = !isNaN(attrs[key]) && attrs[key] > 0;
+      if (isObservedAttr && !isValidNum) {
+        console.error('error: invalid attribute value', attrs[key], ' for', key);
+        return 
+      }
+    }
+
+    (attrs.numPages % 2 === 0) && attrs.numPages++; // make it odd number to find a center
+    const {total=100, page=1, numPerPage=10, numPages=5} = attrs;
+    const index = props.index || (page - 1) * numPerPage;
 
     const pages = this.getPages({total, index, numPerPage, numPages});
     const [pages0, pagesX] = [pages[0], pages.slice(-1)[0]];
@@ -40,9 +50,9 @@
       <div class="pages">
         ${
           pages.map(page => {
-            const pageNum = (page - 1) * numPerPage;
-            const selected = pageNum === index ? ' selected' : '';
-            return `<button class="page${selected}" index="${pageNum}">${page}</button>`;
+            const pageStaIndex = (page - 1) * numPerPage;
+            const selected = pageStaIndex === index ? ' selected' : '';
+            return `<button class="page${selected}" index="${pageStaIndex}">${page}</button>`;
           }).join('\n')
         }</div>
       <button class="next page navigation" title="next page" 

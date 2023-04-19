@@ -50,7 +50,7 @@ export default {
     }
 
     const ulEl = this.host.querySelector('ul');
-    ulEl.setAttribute('tabindex', '0');
+    !ulEl.getAttribute('tabindex') && ulEl.setAttribute('tabindex', '0');
     ulEl.querySelectorAll('li > ul, li > * > ul').forEach(el => {
       const liEl = el.closest('li');
       liEl.parentElement.setAttribute('aria-has-popup','');
