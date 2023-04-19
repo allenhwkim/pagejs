@@ -1,0 +1,15 @@
+{
+  "contact.html": "contents of /contact.html",
+  "index.html": "contents of /index.html<slot></slot>contents of /index.html",
+  "products": {
+    "index.html": "contents of /products/index.html<slot></slot>contents of /products/index.html",
+    "phone": {
+      "index.html": "contents of /products/phone/index.html<slot></slot>contents of /products/phone/index.html",
+      "iphone": {
+        "iphone-10.html": "contents of /products/phone/iphone-10.html",
+        "iphone-11.html": "contents of /products/phone/iphone-11.html"
+      },
+      "stores.html": "contents /products/phone/stores.html"
+    }
+  }
+}
