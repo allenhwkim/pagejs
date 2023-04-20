@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'fs';
 import path from 'path';
-import {minify} from 'html-minifier';
+import { compress, decompress } from './compress.js';
 
 const [_0, _1, pagesPath='./pages', outputPath='./pages.json'] = process.argv;
 
@@ -17,15 +17,13 @@ function main(pagesPath, outputPath) {
   const pagesVar = {};
   walkDir(pagesPath, function(filePath) {
     const url = path.resolve(filePath).replace(new RegExp(`^${path.resolve(pagesPath)}`), '');
-    // console.log({filePath, pagesPath, url}, path.resolve(filePath), path.resolve(pagesPath))
     const fileContents = fs.readFileSync(filePath, 'utf8');
-    const minified = minify(fileContents, {removeAttributeQuotes: true, collapseWhitespace: true});
     const pathName = 'pagesVar' + path.dirname(url).replace(/\//g, '.').replace(/\.$/, '');
     const keyName = path.basename(url);
-    new Function( 'pagesVar', 'contents', `
+    new Function( 'pagesVar', 'contents', 'decompressed', `
       ${pathName} = ${pathName} || {};
-      ${pathName}['${keyName}'] = contents;
-    `)(pagesVar, minified);
+      ${pathName}['${keyName}'] = contents; //console.log(decompressed);
+    `)(pagesVar, compress(fileContents), decompress(compress(fileContents)));
   });
   fs.writeFileSync(path.join(outputPath), JSON.stringify(pagesVar, null, '  '))
 }

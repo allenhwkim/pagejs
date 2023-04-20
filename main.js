@@ -1,6 +1,7 @@
 import './style.css';
 import { initMonacoEditors, initExamples, setExampleAndRun, showGeneratedCode, runCode} from './main-functions';
 import pages from './pages.json'
+import { compress, decompress} from './page-route/compress';
 
 const $ = document.querySelector.bind(document);
 
