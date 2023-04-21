@@ -1,7 +1,9 @@
 import './style.css';
 import { initMonacoEditors, initExamples, setExampleAndRun, showGeneratedCode, runCode} from './main-functions';
-import pages from './pages.json'
-import { compress, decompress} from './page-route/compress';
+// import pages from './pages.json'
+// import { decompress} from './page-route/compress';
+// console.log('testing decompress', decompress(pages.products['index.html']));
+// console.log('testing decompress', decompress(pages.products.phone.iphone['iphone-11.html']));
 
 const $ = document.querySelector.bind(document);
 
