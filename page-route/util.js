@@ -20,9 +20,12 @@ export function decode(str) {
 
   // Decompress Unit8Array
   const unit8arr = pako.inflate(newUint);
-  const json = String.fromCharCode.apply(null, new Uint8Array(unit8arr))
-
-  return JSON.parse(json);
+  const decodedStr = String.fromCharCode.apply(null, new Uint8Array(unit8arr))
+  try {
+    return JSON.parse(decodedStr);
+  } catch(e) {
+    return decodedStr;
+  }
 }
 
 

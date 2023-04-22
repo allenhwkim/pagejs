@@ -6,9 +6,7 @@ export function getPageHTML(pages, filesChain) {
     return filesChain.reduce( (html, varName) =>  {
       const partial = getNestedValue(pages, varName);
       if (partial) {
-        const partial2 = partial + (partial.indexOf('<slot></slot>') > 0 ? '' : '<slot></slot>'); 
-        const slotFilled = partial2.replace('<slot></slot>', `\n${html}\n`);
-        return slotFilled;
+        return partial.replace('<slot></slot>', `\n${html}\n`);
       } else {
         throw "Page not found"
       }

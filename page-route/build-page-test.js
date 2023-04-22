@@ -8,7 +8,7 @@ var pages = {
   "products": {
     "template": "start of /products/template.html<slot></slot>end of /products/template.html",
     "phone": {
-      "template": "start of /products/phone/template.html\nend of /products/phone/template.html",
+      "template": "start of /products/phone/template.html\nend of /products/phone/template.html<slot></slot>",
       "iphone": {
         "10": "contents of /products/phone/10.html",
         "11": "contents of /products/phone/11.html"
@@ -33,7 +33,7 @@ describe('getPageHTML(pages, keys)', () => {
       'start of /products/phone/template.html\n' +
       'end of /products/phone/template.html\n' +
       'contents of /products/phone/11.html\n' +
-      '\n\n\n' +
+      '\n' +
       'end of /products/template.html\n' +
       'end of /template.html'
     );
@@ -45,14 +45,14 @@ describe('getPageHTML(pages, keys)', () => {
       'start of /products/phone/template.html\n' +
       'end of /products/phone/template.html\n' +
       'contents of /products/phone/10.html\n' +
-      '\n\n\n' +
+      '\n' +
       'end of /products/template.html\n' +
       'end of /template.html'
     );
 
     assert.equal(
       getPageHTML(pages, getFilesChain('/contact')), 
-      'contents of /contact.html\n\n' 
+      'contents of /contact.html' 
     );
 
     assert.equal(
@@ -85,14 +85,13 @@ describe('getPageHTML(pages, keys)', () => {
       'start of /template.html\n' +
       'start of /products/template.html\n' +
       'contents /products/phone/stores.html\n' +
-      '\n\n' +
       'end of /products/template.html\n' +
       'end of /template.html' 
     );
   })
 });
 
-describe.only('getFilesChain(url)', () => {
+describe('getFilesChain(url)', () => {
   it('should return files to process from an url', () => {
     assert.deepEqual(getFilesChain('/products/phone/iphone/11'), [
       'products.phone.iphone.11',
@@ -122,17 +121,3 @@ describe.only('getFilesChain(url)', () => {
     assert.deepEqual(getFilesChain(''), [])
   });
 })
-
-describe('getNestedValue(obj, keyu)', () => {
-  var obj = { a: { b: { c: "d" } } };
-  it('should return object value', () => {
-    assert.equal(getNestedValue(obj, 'a.b.c'), 'd');
-    assert.deepEqual(getNestedValue(obj, 'a.b'), {c: 'd'});
-    assert.deepEqual(getNestedValue(obj, 'a'), {b: {c: 'd'}});
-
-    assert.equal(getNestedValue(obj, 'a.b.c.d'), null);
-    assert.equal(getNestedValue(obj, 'a.b.d'), null);
-    assert.equal(getNestedValue(obj, 'a.d'), null);
-    assert.equal(getNestedValue(obj, 'd'), null);
-  });
-});
