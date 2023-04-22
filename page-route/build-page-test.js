@@ -20,6 +20,10 @@ var pages = {
 
 describe.only('getPageHTML(pages, keys)', () => {
   it('should return full html', () => {
+
+    assert.equal(getPageHTML(pages, getFilesChain('/not-found')), null);
+    assert.equal(getPageHTML(pages, getFilesChain('/products/404')), null);
+
     assert.equal(
       getPageHTML(pages, getFilesChain('/products/phone/iphone/11')), 
       'start of /index.html\n' + 
@@ -31,6 +35,67 @@ describe.only('getPageHTML(pages, keys)', () => {
       'end of /products/index.html\n' +
       'end of /index.html'
     );
+
+    assert.equal(
+      getPageHTML(pages, getFilesChain('/products/phone/iphone/10')), 
+      'start of /index.html\n' + 
+      'start of /products/index.html\n' +
+      'start of /products/phone/index.html\n' +
+      'end of /products/phone/index.html\n' +
+      'contents of /products/phone/10.html\n' +
+      '\n\n\n' +
+      'end of /products/index.html\n' +
+      'end of /index.html'
+    );
+
+    assert.equal(
+      getPageHTML(pages, getFilesChain('/contact')), 
+      'contents of /contact.html\n\n' 
+    );
+
+    assert.equal(
+      getPageHTML(pages, getFilesChain('/index')), 
+      'start of /index.html\n\nend of /index.html' 
+    );
+
+    assert.equal(
+      getPageHTML(pages, getFilesChain('/products/index')), 
+      'start of /index.html\n' +
+      'start of /products/index.html\n' +
+      '\n' +
+      'end of /products/index.html\n' +
+      'end of /index.html' 
+    );
+
+    assert.equal(
+      getPageHTML(pages, getFilesChain('/products/phone/index')), 
+      'start of /index.html\n' +
+      'start of /products/index.html\n' +
+      'start of /products/phone/index.html\n' +
+      'end of /products/phone/index.html\n' +
+      '\n\n' +
+      'end of /products/index.html\n' +
+      'end of /index.html' 
+    );
+
+    assert.equal(
+      getPageHTML(pages, getFilesChain('/products/phone/stores')), 
+      'start of /index.html\n' +
+      'start of /products/index.html\n' +
+      'contents /products/phone/stores.html\n' +
+      '\n\n' +
+      'end of /products/index.html\n' +
+      'end of /index.html' 
+    );
+    /*
+    {
+      "products": {
+          "phone": {
+              "stores": "contents /products/phone/stores.html"
+          }
+      }
+    }
+    */
   })
 });
 

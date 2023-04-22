@@ -1,11 +1,19 @@
 // ['products.phone.iphone.11', 'products.phone.index', 'products.index', 'index'];
 export function getPageHTML(pages, filesChain) {
-  return filesChain.reduce( (html, varName) =>  {
-    const partial = getNestedValue(pages, varName);
-    const partial2 = partial + (partial.indexOf('<slot></slot>') > 0 ? '' : '<slot></slot>'); 
-    const slotFilled = partial2.replace('<slot></slot>', `\n${html}\n`);
-    return slotFilled;
-  }, '');
+  try {
+    return filesChain.reduce( (html, varName) =>  {
+      const partial = getNestedValue(pages, varName);
+      if (partial) {
+        const partial2 = partial + (partial.indexOf('<slot></slot>') > 0 ? '' : '<slot></slot>'); 
+        const slotFilled = partial2.replace('<slot></slot>', `\n${html}\n`);
+        return slotFilled;
+      } else {
+        throw "Page not found"
+      }
+    }, '');
+  } catch(e) {
+    return null; 
+  }
 }
 
 export function getFilesChain(url) {
