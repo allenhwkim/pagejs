@@ -23,6 +23,7 @@ describe.only('getPageHTML(pages, keys)', () => {
 
     assert.equal(getPageHTML(pages, getFilesChain('/not-found')), null);
     assert.equal(getPageHTML(pages, getFilesChain('/products/404')), null);
+    assert.equal(getPageHTML(pages, getFilesChain('/products/phone')), null);
 
     assert.equal(
       getPageHTML(pages, getFilesChain('/products/phone/iphone/11')), 
