@@ -21,12 +21,7 @@ var pages = {
 describe.only('getPageHTML(pages, keys)', () => {
   it('should return full html', () => {
     assert.equal(
-      getPageHTML(pages, [
-        'products.phone.iphone.11',
-        'products.phone.index',
-        'products.index',
-        'index'
-      ]), 
+      getPageHTML(pages, getFilesChain('/products/phone/iphone/11')), 
       'start of /index.html\n' + 
       'start of /products/index.html\n' +
       'start of /products/phone/index.html\n' +
