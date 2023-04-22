@@ -6,15 +6,15 @@ var pages = {
   "contact": "contents of /contact.html",
   "template": "start of /template.html<slot></slot>end of /template.html",
   "products": {
-      "template": "start of /products/template.html<slot></slot>end of /products/template.html",
-      "phone": {
-          "template": "start of /products/phone/template.html\nend of /products/phone/template.html",
-          "iphone": {
-              "10": "contents of /products/phone/10.html",
-              "11": "contents of /products/phone/11.html"
-          },
-          "stores": "contents /products/phone/stores.html"
-      }
+    "template": "start of /products/template.html<slot></slot>end of /products/template.html",
+    "phone": {
+      "template": "start of /products/phone/template.html\nend of /products/phone/template.html",
+      "iphone": {
+        "10": "contents of /products/phone/10.html",
+        "11": "contents of /products/phone/11.html"
+      },
+      "stores": "contents /products/phone/stores.html"
+    }
   }
 } 
 
