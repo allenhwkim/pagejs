@@ -1,5 +1,6 @@
 import './style.css';
-import { decode, initMonacoEditors, initExamples, setExampleAndRun, showGeneratedCode, runCode} from './main-functions';
+import { initMonacoEditors, initExamples, setExampleAndRun, showGeneratedCode, runCode} from './main-functions';
+import { decode } from './page-route'
 const $ = document.querySelector.bind(document);
 
 window.fetch('/pages.data?'+new Date().getTime())

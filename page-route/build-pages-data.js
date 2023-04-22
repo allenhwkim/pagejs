@@ -7,6 +7,7 @@ import { encode, walkDir, setNestedVal } from './util.js';
 const options = program
   .option('-p, --pages-path', 'pages directory path', path.resolve('./pages'))
   .option('-o, --output-path', 'output file name', path.resolve('./public/pages.data'))
+  .option('--silent', 'slience the ouptput')
   .parse(process.argv).opts();
 
 const {pagesPath, outputPath} = options;
@@ -27,5 +28,6 @@ walkDir(pagesPath, filePath => {
 
 const json = JSON.stringify(pagesVar);
 const encoded = encode(json);
-console.log(JSON.stringify(pagesVar, null, '  '));
 fs.writeFileSync(path.join(outputPath), encoded);
+
+(!options.silent) && console.log(JSON.stringify(pagesVar, null, '  '));
