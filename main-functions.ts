@@ -1,6 +1,21 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.main.js';
 import { genCustomElement, customElement, fixIndent } from './lib';
 import examples from './examples';
+import pako from 'pako';
+
+// decode deflated binary data to json object;
+export function decode(data) {
+  // data to Unit8Array
+  const arrayBuffer = new ArrayBuffer(data.length * 1);
+  const newUint = new Uint8Array(arrayBuffer);
+  newUint.forEach((_, i) => newUint[i] = data.charCodeAt(i));
+
+  // Decompress Unit8Array
+  const unit8arr = pako.inflate(newUint);
+  const json = String.fromCharCode.apply(null, new Uint8Array(unit8arr))
+
+  return JSON.parse(json);
+}
 
 // initialize all monaco editors
 export function initMonacoEditors() {
