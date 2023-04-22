@@ -1,4 +1,6 @@
-// ['products.phone.iphone.11', 'products.phone.index', 'products.index', 'index'];
+import { getNestedValue } from './index.js';
+
+// ['products.phone.iphone.11', 'products.phone.template', 'products.template', 'template'];
 export function getPageHTML(pages, filesChain) {
   try {
     return filesChain.reduce( (html, varName) =>  {
@@ -17,28 +19,19 @@ export function getPageHTML(pages, filesChain) {
 }
 
 export function getFilesChain(url) {
-  // if ends with / add file name 'index' 
-  url += url.endsWith('/') ? 'index' : ''
-
-  // remove the first '/' and get paths
-  const url2 = url.replace(/^\//, '');
-  const paths = url2.split('/');
+  // remove the first '/' and get paths as an array
+  const paths = url.replace(/^\//, '').split('/').filter(el => el);
   const files = [];
 
   if (paths.length) {
     while(paths.length) {
+      // insert the destination file contents
       files.push( paths.join('.') );
+      // insert template of all parent directories
       paths.pop(); 
-      paths.length && (paths[paths.length - 1] = 'index')
+      paths.length && (paths[paths.length - 1] = 'template')
     }
   }
 
   return files;
-}
-
-// usage getNestedValue({a: {b: {c: 'd'}}}, 'a.b.c')
-export function getNestedValue(obj, keys) {
-  return keys.split('.').reduce(function(o, x) {
-    return (typeof o == 'undefined' || o === null) ? o : o[x];
-  }, obj);
 }

@@ -1,14 +1,14 @@
 import assert from 'assert';
 import { describe, it } from 'node:test';
-import { getFilesChain, getNestedValue, getPageHTML } from './build-page.js';
+import { getFilesChain, getNestedValue, getPageHTML } from './index.js';
 
 var pages = {
   "contact": "contents of /contact.html",
-  "index": "start of /index.html<slot></slot>end of /index.html",
+  "template": "start of /template.html<slot></slot>end of /template.html",
   "products": {
-      "index": "start of /products/index.html<slot></slot>end of /products/index.html",
+      "template": "start of /products/template.html<slot></slot>end of /products/template.html",
       "phone": {
-          "index": "start of /products/phone/index.html\nend of /products/phone/index.html",
+          "template": "start of /products/phone/template.html\nend of /products/phone/template.html",
           "iphone": {
               "10": "contents of /products/phone/10.html",
               "11": "contents of /products/phone/11.html"
@@ -18,7 +18,7 @@ var pages = {
   }
 } 
 
-describe.only('getPageHTML(pages, keys)', () => {
+describe('getPageHTML(pages, keys)', () => {
   it('should return full html', () => {
 
     assert.equal(getPageHTML(pages, getFilesChain('/not-found')), null);
@@ -28,26 +28,26 @@ describe.only('getPageHTML(pages, keys)', () => {
 
     assert.equal(
       getPageHTML(pages, getFilesChain('/products/phone/iphone/11')), 
-      'start of /index.html\n' + 
-      'start of /products/index.html\n' +
-      'start of /products/phone/index.html\n' +
-      'end of /products/phone/index.html\n' +
+      'start of /template.html\n' + 
+      'start of /products/template.html\n' +
+      'start of /products/phone/template.html\n' +
+      'end of /products/phone/template.html\n' +
       'contents of /products/phone/11.html\n' +
       '\n\n\n' +
-      'end of /products/index.html\n' +
-      'end of /index.html'
+      'end of /products/template.html\n' +
+      'end of /template.html'
     );
 
     assert.equal(
       getPageHTML(pages, getFilesChain('/products/phone/iphone/10')), 
-      'start of /index.html\n' + 
-      'start of /products/index.html\n' +
-      'start of /products/phone/index.html\n' +
-      'end of /products/phone/index.html\n' +
+      'start of /template.html\n' + 
+      'start of /products/template.html\n' +
+      'start of /products/phone/template.html\n' +
+      'end of /products/phone/template.html\n' +
       'contents of /products/phone/10.html\n' +
       '\n\n\n' +
-      'end of /products/index.html\n' +
-      'end of /index.html'
+      'end of /products/template.html\n' +
+      'end of /template.html'
     );
 
     assert.equal(
@@ -56,95 +56,70 @@ describe.only('getPageHTML(pages, keys)', () => {
     );
 
     assert.equal(
-      getPageHTML(pages, getFilesChain('/index')), 
-      'start of /index.html\n\nend of /index.html' 
+      getPageHTML(pages, getFilesChain('/template')), 
+      'start of /template.html\n\nend of /template.html' 
     );
 
     assert.equal(
-      getPageHTML(pages, getFilesChain('/products/index')), 
-      'start of /index.html\n' +
-      'start of /products/index.html\n' +
+      getPageHTML(pages, getFilesChain('/products/template')), 
+      'start of /template.html\n' +
+      'start of /products/template.html\n' +
       '\n' +
-      'end of /products/index.html\n' +
-      'end of /index.html' 
+      'end of /products/template.html\n' +
+      'end of /template.html' 
     );
 
     assert.equal(
-      getPageHTML(pages, getFilesChain('/products/phone/index')), 
-      'start of /index.html\n' +
-      'start of /products/index.html\n' +
-      'start of /products/phone/index.html\n' +
-      'end of /products/phone/index.html\n' +
+      getPageHTML(pages, getFilesChain('/products/phone/template')), 
+      'start of /template.html\n' +
+      'start of /products/template.html\n' +
+      'start of /products/phone/template.html\n' +
+      'end of /products/phone/template.html\n' +
       '\n\n' +
-      'end of /products/index.html\n' +
-      'end of /index.html' 
+      'end of /products/template.html\n' +
+      'end of /template.html' 
     );
 
     assert.equal(
       getPageHTML(pages, getFilesChain('/products/phone/stores')), 
-      'start of /index.html\n' +
-      'start of /products/index.html\n' +
+      'start of /template.html\n' +
+      'start of /products/template.html\n' +
       'contents /products/phone/stores.html\n' +
       '\n\n' +
-      'end of /products/index.html\n' +
-      'end of /index.html' 
+      'end of /products/template.html\n' +
+      'end of /template.html' 
     );
-    /*
-    {
-      "products": {
-          "phone": {
-              "stores": "contents /products/phone/stores.html"
-          }
-      }
-    }
-    */
   })
 });
 
-describe('getFilesChain(url)', () => {
+describe.only('getFilesChain(url)', () => {
   it('should return files to process from an url', () => {
     assert.deepEqual(getFilesChain('/products/phone/iphone/11'), [
       'products.phone.iphone.11',
-      'products.phone.index',
-      'products.index',
-      'index'
+      'products.phone.template',
+      'products.template',
+      'template'
     ]);
     
-    assert.deepEqual(
-      getFilesChain('/products/phone/iphone/'),
-      getFilesChain('/products/phone/iphone/index')
-    );
-
-    assert.deepEqual(getFilesChain('/products/phone/index'), [
-      'products.phone.index',
-      'products.index',
-      'index'
+    assert.deepEqual(getFilesChain('/products/phone/template'), [
+      'products.phone.template',
+      'products.template',
+      'template'
     ]);
-
-    assert.deepEqual(
-      getFilesChain('/products/phone/'), 
-      getFilesChain('/products/phone/index')
-    );
 
     assert.deepEqual(getFilesChain('/products/phone'), [
       'products.phone',
-      'index'
+      'template'
     ]);
 
-    assert.deepEqual(getFilesChain('/products/index'), [
-      'products.index',
-      'index'
+    assert.deepEqual(getFilesChain('/products/template'), [
+      'products.template',
+      'template'
     ]);
-
-    assert.deepEqual(
-      getFilesChain('/products/'), 
-      getFilesChain('/products/index')
-    );
 
     assert.deepEqual(getFilesChain('/contact'), ['contact'])
-    assert.deepEqual(getFilesChain('/index'), ['index'])
-    assert.deepEqual(getFilesChain('/'), ['index'])
-    assert.deepEqual(getFilesChain(''), [''])
+    assert.deepEqual(getFilesChain('/template'), ['template'])
+    assert.deepEqual(getFilesChain(''), [])
   });
 })
 
