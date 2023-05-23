@@ -38,6 +38,9 @@ import resizeHtml from './resize-divs/resize-divs.html?raw';
 import resizeOpts from './resize-divs/resize-divs.js?raw';
 import resizeCss  from './resize-divs/resize-divs.css?inline';
 
+import jsonviewerOpts from './jsonviewer/jsonviewer.js?raw';
+import jsonviewerHTML from './jsonviewer/jsonviewer.html?raw';
+
 function getObjStr(script: string) {
   // extraxt only inside '{...}'
   return script.replace(/^[\s\S]*export default/, '').replace(/\}[\s;]*$/, '}')
@@ -55,4 +58,5 @@ export default {
   inputmask:  {in: getObjStr(maskOpts),    out: maskHtml,   css: maskCss},
   combobox:   {in: getObjStr(comboOpts),   out: comboHtml,  css: comboCss},
   resize:     {in: getObjStr(resizeOpts),  out: resizeHtml, css: resizeCss},
+  jsonviewer: {in: getObjStr(jsonviewerOpts), out: jsonviewerHTML},
 }

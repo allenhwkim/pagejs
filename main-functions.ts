@@ -47,7 +47,10 @@ export function setExampleAndRun() {
   if (examples[key]) {
     sessionStorage.setItem('example', key);
 
-    const inputCode = fixIndent(`customElement(${examples[key].in})`);
+    const inputCode = fixIndent(
+      `import {customElement} from 'pagejs';\n\n` +
+      `customElement(${examples[key].in})`
+    );
     const inputEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-input');
     inputEditor.setValue(inputCode);
 
@@ -65,7 +68,7 @@ export function setExampleAndRun() {
 export function getOptions(inputTxt) { // returns customElement(..) options
   const css = (document as any).myform.css.value;
 
-  const matches = inputTxt.trim().match(/^.*?CustomElement\(([\s\S]+)\);?$/i);
+  const matches = inputTxt.trim().match(/^.*?CustomElement\(([\s\S]+)\);?$/im);
   if (matches) {
     const optionsTxt = matches[1];
     const options = new Function('css', `a=${optionsTxt}; return a;`)(css);
@@ -102,7 +105,9 @@ export function runCode() {
   const htmlEditor = monaco.editor.getEditors().find(el => el._domElement.id === 'monaco-html-editor');
 
   const options = getOptions(inputEditor.getValue());
-  const srcChanged = `customElement(${(document as any).myform.in.value})` !== inputEditor.getValue();
+  const orgValue = `import {customElement} from 'pagejs';\n\n` +
+    `customElement(${(document as any).myform.in.value})`;
+  const srcChanged =  orgValue !== inputEditor.getValue();
   options.tagName ||=  'my-custom-element';
 
   // source changed, but using the same tag name(alreay defined)

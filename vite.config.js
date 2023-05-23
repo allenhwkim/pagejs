@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import postcssNesting from 'postcss-nesting';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import minimatch from "minimatch"
+import { minimatch } from 'minimatch'
 import path from 'path';
 import { exec } from 'child_process';
 

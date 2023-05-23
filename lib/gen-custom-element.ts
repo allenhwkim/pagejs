@@ -1,4 +1,6 @@
-import prettier from 'prettier/standalone';
+//@ts-ignore
+import prettier from 'prettier/standalone'; 
+//@ts-ignore
 import parserBabel from 'prettier/parser-babel';
 
 export function genCustomElement( opts: {[key:string]: any}, imports: boolean = true) {
