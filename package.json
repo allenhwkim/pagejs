@@ -2,10 +2,17 @@
   "name": "pagejs",
   "version": "0.1.0",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/lib.js",
+      "require": "./dist/lib.umd.cjs"
+    }
+  },
   "scripts": {
     "start": "vite",
     "test": "node --test",
     "build": "vite build",
+    "build:lib": "vite build --config=./vite.config.lib.js",
     "preview": "vite preview"
   },
   "devDependencies": {
