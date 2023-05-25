@@ -12,12 +12,21 @@
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib"
   },
-  "main": "dist/lib/index.js",
+  "main": "./dist/lib/index.umd.cjs",
+  "module": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/lib/index.js",
+      "require": "./dist/lib/index.umd.cjs"
+    }
+  },
   "files": [
     "dist/lib"
   ],
   "devDependencies": {
     "@babel/parser": "^7.21.4",
+    "@types/node": "^20.2.3",
     "body-scroll-lock": "^4.0.0-beta.0",
     "commander": "^10.0.1",
     "gh-pages": "^5.0.0",
@@ -31,12 +40,7 @@
     "prettier": "^2.8.8",
     "tsx": "^3.12.6",
     "vite": "^4.2.0",
+    "vite-plugin-dts": "^2.3.0",
     "vite-plugin-node-polyfills": "^0.8.1"
-  },
-  "exports": {
-    ".": {
-      "import": "./dist/lib/index.js",
-      "require": "./dist/lib/index.umd.cjs"
-    }
   }
 }
