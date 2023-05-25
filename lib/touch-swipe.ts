@@ -1,4 +1,4 @@
-import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 export class TouchSwipe {
   static els: HTMLElement[] = [];
