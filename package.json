@@ -6,19 +6,19 @@
     "start": "vite",
     "test": "node --test",
     "build": "npm run build:lib && npm run build:gh-pages",
-    "build:lib": "vite build --config=./vite.config.lib.js --outDir=dist/lib",
+    "build:lib": "vite build --config=./vite.config.lib.js",
     "build:gh-pages": "vite build --base pagejs --outDir=dist/gh-pages",
     "deploy:gh-pages": "npm run build:gh-pages && gh-pages -d dist/gh-pages",
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib"
   },
-  "main": "./dist/lib/index.umd.cjs",
-  "module": "./dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/lib/index.js",
-      "require": "./dist/lib/index.umd.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
     }
   },
   "files": [
