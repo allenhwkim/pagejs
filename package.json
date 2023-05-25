@@ -1,24 +1,26 @@
 {
-  "name": "pagejs",
+  "name": "@pgjs/core",
   "version": "0.1.0",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/lib.js",
-      "require": "./dist/lib.umd.cjs"
-    }
-  },
   "scripts": {
     "start": "vite",
     "test": "node --test",
-    "build": "vite build",
-    "build:lib": "vite build --config=./vite.config.lib.js",
-    "preview": "vite preview"
+    "build": "npm run build:lib && npm run build:gh-pages",
+    "build:lib": "vite build --config=./vite.config.lib.js --outDir=dist/lib",
+    "build:gh-pages": "vite build --base pagejs --outDir=dist/gh-pages",
+    "deploy:gh-pages": "npm run build:gh-pages && gh-pages -d dist/gh-pages",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build:lib"
   },
+  "main": "./dist/lib/index.js",
+  "files": [
+    "dist/lib"
+  ],
   "devDependencies": {
     "@babel/parser": "^7.21.4",
     "body-scroll-lock": "^4.0.0-beta.0",
     "commander": "^10.0.1",
+    "gh-pages": "^5.0.0",
     "http-server": "^14.1.1",
     "minimatch": "^9.0.0",
     "monaco-editor": "^0.37.1",
@@ -30,5 +32,11 @@
     "tsx": "^3.12.6",
     "vite": "^4.2.0",
     "vite-plugin-node-polyfills": "^0.8.1"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/lib.js",
+      "require": "./dist/lib.umd.cjs"
+    }
   }
 }

@@ -6,7 +6,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'lib/index.ts'),
       name: 'lib',
-      fileName: 'lib',
+      fileName: 'index',
     },
   }
 });
