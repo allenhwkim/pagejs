@@ -1,7 +1,7 @@
 import morphdom from 'morphdom/dist/morphdom-esm';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.main.js';
 import { customElement, loadScript, waitFor, addCss, removeCss, fixIndent, debounce, getReactProp, TouchSwipe } from "./lib";
-import { genCustomElement } from "./lib/gen-custom-element";
+import { genCustomElement } from "./gen-custom-element";
 import examples from './examples';
 
 // initialize all monaco editors

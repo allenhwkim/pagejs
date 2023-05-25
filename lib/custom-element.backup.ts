@@ -1,6 +1,6 @@
 import morphdom from 'morphdom/dist/morphdom-esm';
 
-import { genCustomElement } from "./gen-custom-element";
+import { genCustomElement } from "../gen-custom-element";
 import { loadScript, waitFor, addCss, removeCss, fixIndent, debounce, getReactProp } from "./util";
 import { TouchSwipe } from './touch-swipe';
 
