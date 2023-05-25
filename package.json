@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib"
   },
+  "main": "dist/lib/index.js",
   "files": [
     "dist/lib"
   ],
