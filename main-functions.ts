@@ -1,5 +1,6 @@
+import morphdom from 'morphdom/dist/morphdom-esm';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.main.js';
-import { genCustomElement, customElement, fixIndent } from './lib';
+import { genCustomElement, customElement, loadScript, waitFor, addCss, removeCss, fixIndent, debounce, getReactProp, TouchSwipe } from "./lib";
 import examples from './examples';
 
 // initialize all monaco editors
@@ -71,7 +72,20 @@ export function getOptions(inputTxt) { // returns customElement(..) options
   const matches = inputTxt.trim().match(/^.*?CustomElement\(([\s\S]+)\);?$/im);
   if (matches) {
     const optionsTxt = matches[1];
-    const options = new Function('css', `a=${optionsTxt}; return a;`)(css);
+    // const options = new Function('loadScript', 'css', `a=${optionsTxt}; return a;`)(loadScript, css);
+    const options = new Function(
+      'loadScript',
+      'waitFor',
+      'addCss',
+      'removeCss', 
+      'fixIndent',
+      'debounce',
+      'getReactProp',
+      'morphdom',
+      'TouchSwipe',
+      'css',
+      `a= ${optionsTxt}; return a;`
+    )(loadScript, waitFor, addCss, removeCss, fixIndent, debounce, getReactProp, morphdom, TouchSwipe, css);
     return options;
   }
 }
@@ -122,7 +136,7 @@ export function runCode() {
   }
 
   // define custom element
-  customElement(options, false); 
+  customElement(options); 
   // Change all tag names to options.tagName, so that it runs with a new tagName
   const newHTML = (document as any).myform.out.value
     .replace(/<[a-z]+-[a-z-]+/g, '<'+options.tagName)

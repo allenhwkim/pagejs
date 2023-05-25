@@ -1,9 +1,10 @@
 export default {
   tagName: 'my-jsonviewer',
   css: `
+    ul.format-json ul { border-left: 1px dashed black; padding-left: 2rem;  margin-left: -12px;}
     ul.format-json li { cursor: initial; }
-    ul.format-json li:has(> ul.hidden) { list-style: '+ ' }
-    ul.format-json li:has(> ul) { list-style: '- '; cursor: pointer; }
+    ul.format-json li:has(> ul.hidden) { list-style: '⊞ ' }
+    ul.format-json li:has(> ul) { list-style: '⊟ '; cursor: pointer; }
     ul.format-json li:has(> ul) sup { display: none; }
     ul.format-json li:has(> ul.hidden) sup { display: initial; opacity: .8; }
     ul.format-json.hidden { display: none; }
@@ -25,12 +26,14 @@ export default {
         const values = Object.values(data[key]).filter(el => typeof el == 'string').join(' / ');
         li.innerHTML = `${key} <sup>${values}</sup>`;
 
-        li.addEventListener('click', e => {
-          const child = e.target.querySelector('ul');
+        const toggleList = function(event) {
+          const child = event.target.querySelector('ul');
           const action = child?.classList.contains('hidden') ? 'remove' : 'add';
           action && child?.classList[action]('hidden');
-          e.stopPropagation();
-        })
+          event.stopPropagation();
+        }
+
+        li.addEventListener('click', toggleList);
         el.appendChild(ul);
 
         (typeof data[key] === 'object') ? 
