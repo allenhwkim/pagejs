@@ -57,8 +57,11 @@ export function customElement(opts: {[key:string]: any}) {
           addCss(this.tagName, opts.css);
         }
       }
-      shouldUpdateDom && this.#updateDOM.call(this, 'connectedCallback');
-      await opts.connectedCallback?.call(this);
+      if (shouldUpdateDom) {
+        this.#updateDOM.call(this, 'connectedCallback');
+      } else {
+        await opts.connectedCallback?.call(this);
+      }
     }
 
     disconnectedCallback() {
@@ -96,6 +99,9 @@ export function customElement(opts: {[key:string]: any}) {
             updated.innerHTML += newHTML;
             morphdom( this.host /*fromNode*/, updated /*toNode*/, { childrenOnly: true }); 
           }
+        }
+        if (caller === 'connectedCallback') {
+          await opts.connectedCallback?.call(this);
         }
       }, 50);
     }
