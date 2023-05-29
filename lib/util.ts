@@ -6,7 +6,8 @@ export function addCss(tagName: string, css: string) {
   const plugin =  prefixer({
     prefix: tagName,
     transform(prefix, selector, prefixedSelector, filePath, rule) { 
-      return selector.match(/^:host/) ? selector.replace(/:host/, prefix): `${prefix} ${selector}`;
+      return selector.match(/^:host/) ? selector.replace(/:host/, prefix):
+        selector.match(new RegExp(`\\s*${tagName}`)) ? selector : `${prefix} ${selector}`;
     },
   });
   const scopedCss = postcss().use(plugin).process(css, {map: false}).css;
