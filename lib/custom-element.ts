@@ -57,8 +57,8 @@ export function customElement(opts: {[key:string]: any}) {
           addCss(this.tagName, opts.css);
         }
       }
-      await opts.connectedCallback?.call(this);
       shouldUpdateDom && this.#updateDOM.call(this, 'connectedCallback');
+      await opts.connectedCallback?.call(this);
     }
 
     disconnectedCallback() {
